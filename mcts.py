@@ -17,16 +17,6 @@ class MCTS():
         self.nnet = nnet
         self.args = args
 
-        self.Qsa = {}       # stores Q values for s,a (as defined in the paper)
-        self.Nsa = {}       # stores #times edge s,a was visited
-        self.Ns = {}        # stores #times board s was visited
-        self.Ps = {}        # stores initial policy (returned by neural net)
-
-        self.Es = {}        # stores game.getGameEnded ended for board s
-        self.Vs = {}        # stores game.getValidMoves for board s
-
-        self.sa = {}        # stores next s for s,a
-
     def getActionProb(self, canonicalBoard, temp=1):
         """
         This function performs numMCTSSims simulations of MCTS starting from
@@ -36,6 +26,16 @@ class MCTS():
             probs: a policy vector where the probability of the ith action is
                    proportional to Nsa[(s,a)]**(1./temp)
         """
+
+        self.Qsa = {}       # stores Q values for s,a (as defined in the paper)
+        self.Nsa = {}       # stores #times edge s,a was visited
+        self.Ns = {}        # stores #times board s was visited
+        self.Ps = {}        # stores initial policy (returned by neural net)
+
+        self.Es = {}        # stores game.getGameEnded ended for board s
+        self.Vs = {}        # stores game.getValidMoves for board s
+
+        self.sa = {}        # stores next s for s,a
 
         # only one turn case
         valid = game.getValidMoves(canonicalBoard, 1)
@@ -56,6 +56,9 @@ class MCTS():
         # force equal conditions for the opponents
         if canonicalBoard.turn_number % 2 == 0:
             canonicalBoard.turn_number += 1
+
+        canonicalBoard.myNextA = None
+        canonicalBoard.enemyNextA = None            
 
         for i in range(self.args["numMCTSSims"]):
             # print("=========== NEW TRY ========")
