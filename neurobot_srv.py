@@ -16,7 +16,7 @@ EFFECTS = [
     "setbigsd", "setsmallsd", "setbigips", "setsmallips", "thanos", "removeNm"
 ]
 
-model = NNet(os.path.join("model", "checkpoint_39.pth.tar.next"))
+model = NNet(os.path.join("model", "checkpoint_100.pth.tar.next"))
 app = Flask(__name__)
 
 def a2str(a):
