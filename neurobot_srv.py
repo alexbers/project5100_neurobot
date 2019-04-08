@@ -12,8 +12,8 @@ from nnet import NNet
 from mcts import MCTS
 
 EFFECTS = [
-    "B+", "B-", "BI+", "BI-", "BD+", "BD-", "S+", "S-", "SI+", "SI-", 
-    "SD+", "SD-", "IPS+", "IPS-", "Centerer", "M-"
+    "addNb", "removeNb", "setbigbi", "setsmallbi", "setbigbd", "setsmallbd", "addNs", "removeNs", "setbigsi", "setsmallsi", 
+    "setbigsd", "setsmallsd", "setbigips", "setsmallips", "thanos", "removeNm"
 ]
 
 model = NNet(os.path.join("model", "checkpoint_39.pth.tar.next"))
@@ -44,7 +44,7 @@ def raw_predict(b):
     return ap, v
 
 
-def calc_best_move(b, sims=320, cpuct=0.75):
+def calc_best_move(b, sims=160, cpuct=1.0):
     global model
     print(str(b))
 
@@ -90,9 +90,9 @@ def bot():
     b.myCooldown = request.args.get("myCooldown", type=int)
 
     myEffectsTimeLeft = request.args.get("myEffectsTimeLeft", type=str)
-    if not re.fullmatch(r"[0-9]{16}", myEffectsTimeLeft):
+    if not re.fullmatch(r"[0-9a-f]{16}", myEffectsTimeLeft):
         return jsonify({"error": f"param myEffectsTimeLeft is invalid"})
-    b.myEffectsTimeLeft = [int(c) for c in myEffectsTimeLeft]
+    b.myEffectsTimeLeft = [int(c, 16) for c in myEffectsTimeLeft]
     
     myCardsAvailable = request.args.get("myCardsAvailable", type=str)
     if not re.fullmatch(r"[0-1]{16}", myCardsAvailable):
@@ -102,12 +102,12 @@ def bot():
     b.enemyS = request.args.get("enemyS", type=int)
     b.enemyB = request.args.get("enemyB", type=int)
     b.enemyM = request.args.get("enemyM", type=int)
-    enemyCooldown = request.args.get("enemyCooldown", type=int)
+    b.enemyCooldown = request.args.get("enemyCooldown", type=int)
     
     enemyEffectsTimeLeft = request.args.get("enemyEffectsTimeLeft", type=str)
-    if not re.fullmatch(r"[0-9]{16}", enemyEffectsTimeLeft):
+    if not re.fullmatch(r"[0-9a-f]{16}", enemyEffectsTimeLeft):
         return jsonify({"error": f"param enemyEffectsTimeLeft is invalid"})
-    b.enemyEffectsTimeLeft = [int(c) for c in enemyEffectsTimeLeft]
+    b.enemyEffectsTimeLeft = [int(c, 16) for c in enemyEffectsTimeLeft]
 
     return jsonify(calc_best_move(b))
     

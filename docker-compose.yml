@@ -3,6 +3,6 @@ services:
   neurobot:
     build: .
     ports:
-      - "10000:10000"
+      - "10001:10001"
     restart: on-failure
     mem_limit: 1024m
